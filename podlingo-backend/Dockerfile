@@ -8,6 +8,15 @@ RUN npm install
 
 COPY . .
 
+# Use build argument for environment variable
+ARG PODCAST_INDEX_API_KEY
+ENV PODCAST_INDEX_API_KEY=$PODCAST_INDEX_API_KEY
+ARG PODCAST_INDEX_API_SECRET
+ENV PODCAST_INDEX_API_SECRET=$PODCAST_INDEX_API_SECRET
+
+#  hot reloading
+RUN npm install -g nodemon
+
 EXPOSE 5000
 
 CMD ["npm", "run", "dev"]

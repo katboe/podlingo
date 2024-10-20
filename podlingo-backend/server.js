@@ -1,9 +1,10 @@
-require('dotenv').config();
-const express = require('express');
-const connectDB = require('./config/db');
-const podcastsRouter = require('./routes/podcast-routes');
+import dotenv from 'dotenv';
+dotenv.config(); 
+import cors from 'cors';
+import express from 'express';
 
-const cors = require('cors');
+import connectDB from './config/db.js'; // Use import
+import podcastRouter from './routes/podcast-routes.js'; // Update to import
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.use(express.json())
 app.use(cors());
 
 //Route
-app.use('/api/podcasts', podcastsRouter);
+app.use('/api/podcasts', podcastRouter);
 
 
 // Root route

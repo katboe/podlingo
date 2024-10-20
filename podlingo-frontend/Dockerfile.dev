@@ -1,0 +1,22 @@
+# Use Node.js image for development
+FROM node:14
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the package files and install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Use build argument for environment variable
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
+# Copy the rest of the app
+COPY . .
+
+# Expose the frontend port
+EXPOSE 3000
+
+# Start the React app in development mode
+CMD ["npm", "start"]

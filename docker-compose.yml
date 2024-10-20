@@ -3,15 +3,24 @@ services:
   backend:
     build:
       context: ./podlingo-backend
+      args:
+        PODCAST_INDEX_API_KEY: ${PODCAST_INDEX_API_KEY}
+        PODCAST_INDEX_API_SECRET: ${PODCAST_INDEX_API_SECRET}
     environment:
       - MONGO_URI=${MONGO_URI}  # Using variable from .env
-      - NODE_ENV=production
+      - NODE_ENV=development
     ports:
       - '5000:5000'
+    volumes:
+      - ./podlingo-backend:/app 
+      
   frontend:
     build:
       context: ./podlingo-frontend
+      dockerfile: Dockerfile  # Use the development Dockerfile
       args:
         REACT_APP_API_URL: ${REACT_APP_API_URL:-http://localhost:5000/api}
     ports:
-      - '3000:80'
+      - '3000:80' #80 for nginx (production)
+    volumes:
+      - ./podlingo-frontend:/app  # Mount the local frontend directory

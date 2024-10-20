@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const PodcastSchema = new mongoose.Schema({
   title: {
@@ -27,4 +27,4 @@ const PodcastSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Podcast', PodcastSchema);
+export default mongoose.model('Podcast', PodcastSchema);

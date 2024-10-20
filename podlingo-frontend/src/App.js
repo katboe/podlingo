@@ -1,6 +1,5 @@
 import React from 'react';
-import PodcastList from './components/PodcastList';
-import AddPodcast from './components/AddPodcast';
+import PodcastSearch from './components/PodcastSearch';
 import './styles.css'; 
 
 function App() {
@@ -11,16 +10,21 @@ function App() {
       </header>
 
       {/* Section to add a new podcast */}
-      <section>
+      {/* <section>
         <h2>Add a New Podcast</h2>
         <AddPodcast />
+      </section> */}
+
+      {/* Section to search for podcasts */}
+      <section>
+        <PodcastSearch />
       </section>
 
-      {/* Section to display the list of podcasts */}
+      {/* Section to display the list of podcasts
       <section>
         <h2>Available Podcasts</h2>
         <PodcastList />
-      </section>
+      </section> */}
     </div>
   );
 }
