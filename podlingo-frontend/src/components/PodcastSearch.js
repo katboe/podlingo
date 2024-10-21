@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
+import '../PodcastSearch.css'; 
 
 const PodcastSearch = () => {
   const [query, setQuery] = useState('');
   const [language, setLanguage] = useState('');
   const [level, setLevel] = useState('');
+  const [availableLevels, setAvailableLevels] = useState([]); 
   const [availableLanguages, setAvailableLanguages] = useState([]);
   const [podcasts, setPodcasts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +24,17 @@ const PodcastSearch = () => {
       }
     };
 
+    const fetchLevels = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/levels`); // Fetch levels from new endpoint
+        setAvailableLevels(response.data);
+      } catch (err) {
+        setError('Error fetching language levels.');
+      }
+    };
+
     fetchLanguages();
+    fetchLevels();
   }, []);
 
   const handleSearch = async () => {
@@ -37,7 +49,18 @@ const PodcastSearch = () => {
       const { feeds } = response.data;
       setPodcasts(feeds);
     } catch (err) {
-      setError('Error fetching podcasts. Please try again.');
+      if (err.response) {
+        if (err.response.status === 400) {
+          setError('Please select a language.');
+        } else if (err.response.status === 500) {
+          setError('Error fetching podcasts from the server. Please try again.');
+        } else {
+          setError('An unexpected error occurred. Please try again.');
+        }
+      } else {
+        // If the error doesn't have a response (e.g., network issues)
+        setError('Network error. Please check your connection and try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -63,12 +86,11 @@ const PodcastSearch = () => {
         </select>
         <select value={level} onChange={(e) => setLevel(e.target.value)}>
           <option value="">Select Level</option>
-          <option value="A1">A1</option>
-          <option value="A2">A2</option>
-          <option value="B1">B1</option>
-          <option value="B2">B2</option>
-          <option value="C1">C1</option>
-          <option value="C2">C2</option>
+          {availableLevels.map((levelObj) => (
+            <option key={levelObj.level} value={levelObj.level}>
+              {levelObj.level}
+            </option>
+          ))}
         </select>
         <button type="button" onClick={handleSearch} disabled={loading}>
           {loading ? 'Searching...' : 'Search'}

@@ -3,6 +3,9 @@ import crypto from 'crypto';
 import fetch from 'node-fetch';
 
 import Podcast from '../models/podcast.js'
+import Language from '../models/language.js';
+import LanguageLevel from '../models/languageLevel.js'; 
+
 import classifyPodcastLevel from '../utils/languageLevelClassifier.js';
 
 const podcastRouter = express.Router();
@@ -23,10 +26,14 @@ const generateAuthHash = () => {
 };
 
 // Route to search podcasts using Podcast Index API
-// Route to search podcasts using Podcast Index API
 podcastRouter.get('/search', async (req, res) => {
   const { query, language, level } = req.query;
   const { hashForHeader, apiHeaderTime } = generateAuthHash();
+
+  // Check if language is set
+  if (!language) {
+    return res.status(400).json({ message: 'Language must be set.' });
+  }
 
   const options = {
     method: 'GET',
@@ -39,7 +46,11 @@ podcastRouter.get('/search', async (req, res) => {
   };
 
   try {
-    const url = `https://api.podcastindex.org/api/1.0/search/byterm?q=${query}`
+    // Fetch the specified language from the database
+    const selectedLanguage = await Language.findOne({ code: language }).exec();
+    const nativeLanguageName = selectedLanguage ? selectedLanguage.nativeName : language; // Default to code if not found
+
+    const url = `https://api.podcastindex.org/api/1.0/search/byterm?q=${query}+${nativeLanguageName}&max=200`; //find language podcasts in native language & get many
     const response = await fetch(url, options);
     const data = await response.json();
     
@@ -48,33 +59,36 @@ podcastRouter.get('/search', async (req, res) => {
     const podcasts = data.feeds; // Array of podcast objects
 
     // Filter by language
-    const filteredPodcasts = podcasts.filter(podcast => {
+    let filteredPodcasts = podcasts.filter(podcast => {
       return podcast.language === language; // Assuming the language is case-sensitive
+    })
+
+    if (query) {
+      filteredPodcasts = filteredPodcasts.filter(podcast => {
+        return podcast.title.toLowerCase().includes(query.toLowerCase()) ||
+               podcast.description.toLowerCase().includes(query.toLowerCase());
+      });
+    }
+
+    // Classify podcasts based on title and description
+    const classifiedPodcasts = await Promise.all(filteredPodcasts.map(async podcast => {
+      const level = await classifyPodcastLevel(podcast.title, podcast.description, language);
+      console.log(podcast.title)
+      console.log(level)
+      return { ...podcast, classifiedLevel: level }; // Add classification to the podcast object
+    }));
+
+    // Filter podcasts by the classified level if 'level' is specified in the query
+    const podcastsMatchingLevel = classifiedPodcasts.filter(podcast => {
+      return level ? podcast.classifiedLevel === level : true;  // Filter only if 'level' is provided
     });
-
-    // Filter by language (this can be adjusted based on how you identify language)
-    // const finalResults = podcasts.filter(podcast => {
-    //   // Assuming podcast language is in the 'language' field, adjust as necessary
-    //   return podcast.language === language;
-    // });
-
-    // // Determine level for each podcast
-    // const filteredAndLabeled = filteredByLanguage.map(podcast => {
-    //   const level = classifyPodcastLevel(podcast.description); // Implement your classification logic
-    //   return { ...podcast, level }; // Attach level to the podcast data
-    // });
-
-    // // Filter by user-selected level
-    // const finalResults = filteredAndLabeled.filter(podcast => {
-    //   return podcast.level === level; // Adjust to handle cases where level is undefined
-    // });
 
     // Construct response
     const responsePayload = {
       status: data.status,
-      count: filteredPodcasts.length,
+      count: podcastsMatchingLevel.length,
       query,
-      feeds: filteredPodcasts,
+      feeds: podcastsMatchingLevel,
     };
 
     res.json(responsePayload);
@@ -84,16 +98,28 @@ podcastRouter.get('/search', async (req, res) => {
   }
 });
 
-// Endpoint to fetch available languages
-podcastRouter.get('/languages', (req, res) => {
-  const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'de', name: 'German' },
-    // Add more languages here
-  ];
-  
-  res.json(languages);
+// Endpoint to fetch available languages from the database
+podcastRouter.get('/languages', async (req, res) => {
+  try {
+    const languages = await Language.find(); // Fetch languages from the database
+    res.json(languages);
+  } catch (err) {
+    console.error('Error fetching languages:', err);
+    res.status(500).json({ message: 'Error fetching languages.' });
+  }
 });
+
+// Endpoint to fetch available language levels
+podcastRouter.get('/levels', async (req, res) => {
+  try {
+    const levels = await LanguageLevel.find({ isActive: true }).sort('order');
+    res.json(levels);
+  } catch (err) {
+    console.error('Error fetching levels:', err);
+    res.status(500).json({ message: 'Error fetching language levels.' });
+  }
+});
+
 
 //get all podcasts
 podcastRouter.get('/', async(req, res) => {
@@ -106,22 +132,5 @@ podcastRouter.get('/', async(req, res) => {
 });
 
 
-// Add a new podcast
-podcastRouter.post('/', async (req, res) => {
-    const podcast = new Podcast({
-      title: req.body.title,
-      language: req.body.language,
-      level: req.body.level,
-      topic: req.body.topic,
-      url: req.body.url,
-      description: req.body.description
-    });
-    try {
-      const newPodcast = await podcast.save();
-      res.status(201).json(newPodcast);
-    } catch (err) {
-      res.status(400).json({ message: err.message });
-    }
-  });
-  
-  export default podcastRouter;
+// Default export
+export default podcastRouter;
