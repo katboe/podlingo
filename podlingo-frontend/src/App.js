@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PodcastSearch from './components/PodcastSearch';
-import UserPreferences from './components/UserPreferences';
+import UserLanguages from './components/UserLanguages';
 import Navbar from './components/Navbar';
 import './styles.css'; 
 
@@ -10,7 +10,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<PodcastSearch />} />
-        <Route path="/preferences" element={<UserPreferences />} />
+        <Route path="/settings" element={<UserLanguages />} />
       </Routes>
     </Router>
   );

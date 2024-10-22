@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext'; // Adjust the import path as needed
 import RegisterForm from './RegisterForm'; // Adjust the import path as needed
 import LoginForm from './LoginForm'; // Adjust the import path as needed
+import { Link } from 'react-router-dom'; 
 
 const Navbar = () => {
   const { token, logout } = useContext(UserContext); // Use context to access token and logout method
@@ -15,8 +16,13 @@ const Navbar = () => {
   return (
     <nav style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
       {token ? (
-        // If logged in, show logout button
-        <button onClick={handleLogout}>Logout</button>
+        // If logged in, show setting asnd loginlogout button
+        <>
+            <Link to="/settings">
+                <button>Settings</button>
+            </Link>
+            <button onClick={handleLogout}>Logout</button>
+        </>
       ) : (
         <>
           {/* Login/Registration buttons */}

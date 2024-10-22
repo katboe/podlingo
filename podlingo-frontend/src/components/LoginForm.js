@@ -33,6 +33,7 @@ const LoginForm = ({ setModalIsOpen }) => {
       const data = await response.json();
 
       if (response.ok) {
+        console.log(data.token)
         login(data.token); // Log the user in with the token received
         setModalIsOpen(false); // Close the modal after successful login
       } else {
