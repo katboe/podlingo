@@ -7,6 +7,7 @@ import Language from '../models/language.js';
 import LanguageLevel from '../models/languageLevel.js'; 
 
 import classifyPodcastLevel from '../utils/languageLevelClassifier.js';
+import { authenticateJWT } from '../middleware/auth.js'; 
 
 const podcastRouter = express.Router();
 
@@ -24,6 +25,33 @@ const generateAuthHash = () => {
   const hashForHeader = sha1Hash.digest('hex');
   return { hashForHeader, apiHeaderTime };
 };
+
+// Fetch podcasts for the user based on their preferences
+podcastRouter.get('/user', authenticateJWT, async (req, res) => {
+  const user = await User.findById(req.user.userId).populate('languages');
+
+  if (!user || !user.languages) {
+    return res.status(404).json({ message: 'No preferences found' });
+  }
+
+  const podcasts = []; // This should come from your podcast API or database
+  
+  // For each language and level, classify and filter podcasts
+  for (const { language, level } of user.languages) {
+    const filteredPodcasts = podcasts.filter(async podcast => {
+      // Logic to classify podcasts based on language and level
+      const classification = await classifyPodcastLevel(podcast.title, podcast.description, language);
+      return classification === level;
+    });
+
+    // Collect the filtered podcasts for this language and level
+    userPodcasts[language] = filteredPodcasts;
+  }
+
+  res.json({ podcasts: userPodcasts });
+});
+
+
 
 // Route to search podcasts using Podcast Index API
 podcastRouter.get('/search', async (req, res) => {

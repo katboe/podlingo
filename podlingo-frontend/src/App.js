@@ -1,20 +1,18 @@
-import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PodcastSearch from './components/PodcastSearch';
+import UserPreferences from './components/UserPreferences';
+import Navbar from './components/Navbar';
 import './styles.css'; 
 
 function App() {
   return (
-    <div className="App">
-      <header>
-        <h1>Language Podcast Finder</h1>
-      </header>
-
-      {/* Section to search for podcasts */}
-      <section>
-        <PodcastSearch />
-      </section>
-
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<PodcastSearch />} />
+        <Route path="/preferences" element={<UserPreferences />} />
+      </Routes>
+    </Router>
   );
 }
 

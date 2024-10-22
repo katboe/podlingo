@@ -5,6 +5,8 @@ import express from 'express';
 
 import connectDB from './config/db.js'; // Use import
 import podcastRouter from './routes/podcast-routes.js'; // Update to import
+import authRouter from './routes/auth.js';
+import userRouter from './routes/user.js'; // Update to import
 
 const app = express();
 
@@ -17,6 +19,11 @@ app.use(cors());
 //Route
 app.use('/api/podcasts', podcastRouter);
 
+// Use authentication routes
+app.use('/api/auth', authRouter);
+
+// Use authentication routes
+app.use('/api/user', userRouter);
 
 // Root route
 app.get('/', (req, res) => {

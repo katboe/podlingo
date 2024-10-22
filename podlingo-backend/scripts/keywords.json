@@ -1,0 +1,302 @@
+[
+    {
+      "language": "en",
+      "level": "A1",
+      "words": ["simple", "easy", "beginner"]
+    },
+    {
+      "language": "en",
+      "level": "A2",
+      "words": ["slow", "basic", "intermediate"]
+    },
+    {
+      "language": "en",
+      "level": "B1",
+      "words": ["average", "intermediate", "common"]
+    },
+    {
+      "language": "en",
+      "level": "B2",
+      "words": ["advanced", "complex", "challenging"]
+    },
+    {
+      "language": "en",
+      "level": "C1",
+      "words": ["proficient", "high-level", "fluent"]
+    },
+    {
+      "language": "en",
+      "level": "C2",
+      "words": ["expert", "native", "master"]
+    },
+    {
+      "language": "es",
+      "level": "A1",
+      "words": ["sencillo", "fácil", "principiante"]
+    },
+    {
+      "language": "es",
+      "level": "A2",
+      "words": ["lento", "básico", "intermedio"]
+    },
+    {
+      "language": "es",
+      "level": "B1",
+      "words": ["promedio", "intermedio", "común"]
+    },
+    {
+      "language": "es",
+      "level": "B2",
+      "words": ["avanzado", "complejo", "desafiante"]
+    },
+    {
+      "language": "es",
+      "level": "C1",
+      "words": ["competente", "alto nivel", "fluido"]
+    },
+    {
+      "language": "es",
+      "level": "C2",
+      "words": ["experto", "nativo", "maestro"]
+    },
+    {
+      "language": "fr",
+      "level": "A1",
+      "words": ["simple", "facile", "débutant"]
+    },
+    {
+      "language": "fr",
+      "level": "A2",
+      "words": ["lent", "de base", "intermédiaire"]
+    },
+    {
+      "language": "fr",
+      "level": "B1",
+      "words": ["moyen", "intermédiaire", "commun"]
+    },
+    {
+      "language": "fr",
+      "level": "B2",
+      "words": ["avancé", "complexe", "difficile"]
+    },
+    {
+      "language": "fr",
+      "level": "C1",
+      "words": ["compétent", "haut niveau", "courant"]
+    },
+    {
+      "language": "fr",
+      "level": "C2",
+      "words": ["expert", "natif", "maître"]
+    },
+    {
+      "language": "de",
+      "level": "A1",
+      "words": ["einfach", "leicht", "Anfänger"]
+    },
+    {
+      "language": "de",
+      "level": "A2",
+      "words": ["langsam", "grundlegend", "mittel"]
+    },
+    {
+      "language": "de",
+      "level": "B1",
+      "words": ["durchschnittlich", "mittel", "häufig"]
+    },
+    {
+      "language": "de",
+      "level": "B2",
+      "words": ["fortgeschritten", "komplex", "herausfordernd"]
+    },
+    {
+      "language": "de",
+      "level": "C1",
+      "words": ["kompetent", "hohes Niveau", "fließend"]
+    },
+    {
+      "language": "de",
+      "level": "C2",
+      "words": ["Experte", "eingeboren", "Meister"]
+    },
+    {
+      "language": "zh",
+      "level": "A1",
+      "words": ["简单", "容易", "初学者"]
+    },
+    {
+      "language": "zh",
+      "level": "A2",
+      "words": ["缓慢", "基础", "中级"]
+    },
+    {
+      "language": "zh",
+      "level": "B1",
+      "words": ["平均", "中级", "常见"]
+    },
+    {
+      "language": "zh",
+      "level": "B2",
+      "words": ["高级", "复杂", "挑战"]
+    },
+    {
+      "language": "zh",
+      "level": "C1",
+      "words": ["熟练", "高水平", "流利"]
+    },
+    {
+      "language": "zh",
+      "level": "C2",
+      "words": ["专家", "母语", "大师"]
+    },
+    {
+      "language": "ru",
+      "level": "A1",
+      "words": ["простой", "легкий", "начинающий"]
+    },
+    {
+      "language": "ru",
+      "level": "A2",
+      "words": ["медленный", "базовый", "промежуточный"]
+    },
+    {
+      "language": "ru",
+      "level": "B1",
+      "words": ["средний", "промежуточный", "распространенный"]
+    },
+    {
+      "language": "ru",
+      "level": "B2",
+      "words": ["продвинутый", "сложный", "сложный"]
+    },
+    {
+      "language": "ru",
+      "level": "C1",
+      "words": ["компетентный", "высокий уровень", "свободный"]
+    },
+    {
+      "language": "ru",
+      "level": "C2",
+      "words": ["эксперт", "родной", "мастер"]
+    },
+    {
+      "language": "pt",
+      "level": "A1",
+      "words": ["simples", "fácil", "iniciante"]
+    },
+    {
+      "language": "pt",
+      "level": "A2",
+      "words": ["lento", "básico", "intermediário"]
+    },
+    {
+      "language": "pt",
+      "level": "B1",
+      "words": ["médio", "intermediário", "comum"]
+    },
+    {
+      "language": "pt",
+      "level": "B2",
+      "words": ["avançado", "complexo", "desafiador"]
+    },
+    {
+      "language": "pt",
+      "level": "C1",
+      "words": ["competente", "alto nível", "fluente"]
+    },
+    {
+      "language": "pt",
+      "level": "C2",
+      "words": ["especialista", "nativo", "mestre"]
+    },
+    {
+      "language": "ar",
+      "level": "A1",
+      "words": ["بسيط", "سهل", "مبتدئ"]
+    },
+    {
+      "language": "ar",
+      "level": "A2",
+      "words": ["بطيء", "أساسي", "متوسط"]
+    },
+    {
+      "language": "ar",
+      "level": "B1",
+      "words": ["متوسط", "شائع", "أكثر شيوعًا"]
+    },
+    {
+      "language": "ar",
+      "level": "B2",
+      "words": ["متقدم", "معقد", "تحدي"]
+    },
+    {
+      "language": "ar",
+      "level": "C1",
+      "words": ["كفء", "مستوى عالٍ", "بطلاقة"]
+    },
+    {
+      "language": "ar",
+      "level": "C2",
+      "words": ["خبير", "أصلي", "معلم"]
+    },
+    {
+      "language": "ja",
+      "level": "A1",
+      "words": ["簡単", "易しい", "初心者"]
+    },
+    {
+      "language": "ja",
+      "level": "A2",
+      "words": ["遅い", "基本的", "中級"]
+    },
+    {
+      "language": "ja",
+      "level": "B1",
+      "words": ["平均", "中級", "一般的"]
+    },
+    {
+      "language": "ja",
+      "level": "B2",
+      "words": ["上級", "複雑", "挑戦"]
+    },
+    {
+      "language": "ja",
+      "level": "C1",
+      "words": ["熟練した", "高レベル", "流暢"]
+    },
+    {
+      "language": "ja",
+      "level": "C2",
+      "words": ["専門家", "母国語", "達人"]
+    },
+    {
+      "language": "ko",
+      "level": "A1",
+      "words": ["간단한", "쉬운", "초보자"]
+    },
+    {
+      "language": "ko",
+      "level": "A2",
+      "words": ["느린", "기본", "중간"]
+    },
+    {
+      "language": "ko",
+      "level": "B1",
+      "words": ["평균", "중간", "흔한"]
+    },
+    {
+      "language": "ko",
+      "level": "B2",
+      "words": ["고급", "복잡한", "도전적인"]
+    },
+    {
+      "language": "ko",
+      "level": "C1",
+      "words": ["능숙한", "고급", "유창한"]
+    },
+    {
+      "language": "ko",
+      "level": "C2",
+      "words": ["전문가", "원주율", "대가"]
+    }
+  ]

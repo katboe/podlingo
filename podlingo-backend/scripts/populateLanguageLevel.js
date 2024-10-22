@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import LanguageLevel from './models/languageLevel.js'; // Adjust the path as necessary
+import LanguageLevel from '../models/languageLevel.js'; // Adjust the path as necessary
 
 // Replace with your MongoDB connection string
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://podlingo-user:p1dl2ng3_@podlingodb.xgtqu.mongodb.net/podcastsdb?retryWrites=true&w=majority&appName=PodlingoDB";
+const MONGODB_URI = process.env.MONGODB_URI || "xxx";
 
 const languageLevels = [
   {
