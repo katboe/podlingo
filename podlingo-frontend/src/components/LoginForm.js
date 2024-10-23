@@ -24,6 +24,7 @@ const LoginForm = ({ setModalIsOpen }) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
         method: 'POST',
+        credentials: 'include', //allows credentials to be sent and received
         headers: {
           'Content-Type': 'application/json',
         },
@@ -33,7 +34,6 @@ const LoginForm = ({ setModalIsOpen }) => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data.token)
         login(data.token); // Log the user in with the token received
         setModalIsOpen(false); // Close the modal after successful login
       } else {
