@@ -56,25 +56,36 @@ authRouter.post('/login', async (req, res) => {
     const { email, password } = req.body;
   
     try {
-      // Find the user by email
-      const user = await User.findOne({ email });
+      // // Find the user by email
+      const user = await User.findOne({ email }).lean(); //user needs to be a plain object for jwt sign in
       if (!user) {
-        return res.status(400).json({ message: 'Invalid credentials' });
+         return res.status(400).json({ message: 'Invalid credentials' });
       }
   
-      // Compare password with hashed password
+      // // Compare password with hashed password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid credentials' });
+         return res.status(400).json({ message: 'Invalid credentials' });
       }
-  
-      // Create a token
-      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
-  
-      res.json({ token });
+     
+      // Generate JWT
+      const token = jwt.sign(user, JWT_SECRET, { expiresIn: '1h' });
+
+      // Send the token in an HttpOnly cookie
+      res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'Lax',  path: '/' }); // Secure=true in production
+      //res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'None',  path: '/' }); // Secure=true in production
+      res.status(200).json({ message: 'Login successful' });
+      
     } catch (error) {
+      console.log(error)
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+// Logout route (to clear the cookie)
+authRouter.post('/logout', (req, res) => {
+  res.clearCookie('token'); // Clear the JWT cookie
+  res.json({ message: 'Logout successful' });
+});
 
 export default authRouter;

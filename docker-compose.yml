@@ -6,9 +6,11 @@ services:
       args:
         PODCAST_INDEX_API_KEY: ${PODCAST_INDEX_API_KEY}
         PODCAST_INDEX_API_SECRET: ${PODCAST_INDEX_API_SECRET}
+        CLIENT_URL: ${CLIENT_URL}
     environment:
       - MONGO_URI=${MONGO_URI}  # Using variable from .env
       - NODE_ENV=development
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - '5000:5000'
     volumes:

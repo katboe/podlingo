@@ -7,7 +7,7 @@ import Language from '../models/language.js';
 import LanguageLevel from '../models/languageLevel.js'; 
 
 import classifyPodcastLevel from '../utils/languageLevelClassifier.js';
-import { authenticateJWT } from '../middleware/auth.js'; 
+import authenticateJWT from '../middleware/auth.js'; 
 
 const podcastRouter = express.Router();
 
@@ -101,8 +101,6 @@ podcastRouter.get('/search', async (req, res) => {
     // Classify podcasts based on title and description
     const classifiedPodcasts = await Promise.all(filteredPodcasts.map(async podcast => {
       const level = await classifyPodcastLevel(podcast.title, podcast.description, language);
-      console.log(podcast.title)
-      console.log(level)
       return { ...podcast, classifiedLevel: level }; // Add classification to the podcast object
     }));
 
