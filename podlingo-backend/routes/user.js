@@ -5,10 +5,10 @@ import authenticateJWT from '../middleware/auth.js'; // Middleware to authentica
 
 const userRouter = express.Router();
 
-// Update user languages and levels
+// Add a new user languages and levels
 userRouter.post('/languages', authenticateJWT, async (req, res) => {
   const { languageCode, level } = req.body;
-S
+
   const user = await User.findByIdAndUpdate(
     req.user._id, // Correctly access userId
     { $addToSet: { languages: { code: languageCode, level: level } } }, // Use $addToSet to avoid duplicates
@@ -22,7 +22,28 @@ S
   res.json({ message: 'Languages updated' });
 });
 
-// Update user languages and levels
+// Update a specific language level for the user
+userRouter.put('/languages', authenticateJWT, async (req, res) => {
+  const { languageCode, newLevel } = req.body;
+  
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Find and update the language in the user's languages array
+    const languageToUpdate = user.languages.find(lang => lang.code === languageCode);
+    if (!languageToUpdate) return res.status(404).json({ message: 'Language not found' });
+
+    languageToUpdate.level = newLevel;
+    await user.save();
+    
+    res.json({ message: 'Language level updated', updatedLanguage: languageToUpdate });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
+// Delete user languages and levels
 userRouter.delete('/languages', authenticateJWT, async (req, res) => {
   const { languageCode } = req.body; // Extract the language code from the request body
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import debounce from 'lodash.debounce';
-import '../PodcastSearch.css'; 
+import { TextField, Select, MenuItem, Button, CircularProgress, Typography } from '@mui/material';
+import PodcastItem from './PodcastItem.js';
 
 const PodcastSearch = () => {
   const [query, setQuery] = useState('');
@@ -68,38 +68,61 @@ const PodcastSearch = () => {
 
   return (
     <div>
-      <h1>Search Podcasts</h1>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <input
-          type="text"
+      <Typography variant="h4">Search Podcasts</Typography>
+      <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <TextField
+          variant="outlined"
           placeholder="Search..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          fullWidth
         />
-        <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-          <option value="">Select Language</option>
+        <Select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          displayEmpty
+          fullWidth
+          variant="outlined"
+        >
+          <MenuItem value="">
+            <em>Select Language</em>
+          </MenuItem>
           {availableLanguages.map((lang) => (
-            <option key={lang.code} value={lang.code}>
+            <MenuItem key={lang.code} value={lang.code}>
               {lang.name}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-        <select value={level} onChange={(e) => setLevel(e.target.value)}>
-          <option value="">Select Level</option>
+        </Select>
+        <Select
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+          displayEmpty
+          fullWidth
+          variant="outlined"
+        >
+          <MenuItem value="">
+            <em>Select Level</em>
+          </MenuItem>
           {availableLevels.map((levelObj) => (
-            <option key={levelObj.level} value={levelObj.level}>
+            <MenuItem key={levelObj.level} value={levelObj.level}>
               {levelObj.level}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-        <button type="button" onClick={handleSearch} disabled={loading}>
+        </Select>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSearch}
+          disabled={loading}
+          startIcon={loading ? <CircularProgress size={20} /> : null}
+        >
           {loading ? 'Searching...' : 'Search'}
-        </button>
+        </Button>
       </form>
 
-      {error && <p>{error}</p>}
+      {error && <Typography color="error">{error}</Typography>}
 
-      {podcasts.length > 0 && <h2>Results:</h2>}
+      {podcasts.length > 0 && <Typography variant="h6">Results:</Typography>}
       <ul>
         {podcasts.map((podcast) => (
           <PodcastItem podcast={podcast} key={podcast.id} />
@@ -108,15 +131,5 @@ const PodcastSearch = () => {
     </div>
   );
 };
-
-const PodcastItem = React.memo(({ podcast }) => (
-  <li key={podcast.id}>
-    <h3>{podcast.title}</h3>
-    <p>{podcast.description}</p>
-    <p>Author: {podcast.author}</p>
-    <a href={podcast.link} target="_blank" rel="noopener noreferrer">Listen</a>
-    <img src={podcast.image} alt={podcast.title} loading="lazy" style={{ width: '100px' }} />
-  </li>
-));
 
 export default PodcastSearch;

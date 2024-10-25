@@ -4,42 +4,78 @@ import RegisterForm from './RegisterForm'; // Adjust the import path as needed
 import LoginForm from './LoginForm'; // Adjust the import path as needed
 import { Link } from 'react-router-dom'; 
 import LogoutButton from './LogoutButton';
+import { AppBar, Toolbar, Button, Box, Popover } from '@mui/material';
 
 const Navbar = () => {
   const {isAuthenticated} = useContext(UserContext); // Use context to access token and logout method
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOpen = (event, isRegister) => {
+    setAnchorEl(event.currentTarget);
+    setIsRegistering(isRegister);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
 
   return (
-    <nav style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
-      {isAuthenticated ? (
-        // If logged in, show setting asnd loginlogout button
-        <>
-            <Link to="/settings">
-                <button>Settings</button>
+    <AppBar position="static">
+      <Toolbar style={{ justifyContent: 'flex-end' }}>
+        {isAuthenticated ? (
+          <>
+            <Link to="/settings" style={{ textDecoration: 'none' }}>
+              <Button color="inherit">Settings</Button>
             </Link>
             <LogoutButton />
-        </>
-      ) : (
-        <>
-          {/* Login/Registration buttons */}
-          <button onClick={() => { setIsRegistering(true); setModalIsOpen(true); }}>Register</button>
-          <button onClick={() => { setIsRegistering(false); setModalIsOpen(true); }}>Login</button>
-        </>
-      )}
+          </>
+        ) : (
+          <>
+            <Button 
+              color="inherit" 
+              onClick={(e) => handleOpen(e, true)}
+            >
+              Register
+            </Button>
+            <Button 
+              color="inherit" 
+              onClick={(e) => handleOpen(e, false)}
+            >
+              Login
+            </Button>
+          </>
+        )}
 
-      {/* Modal for registration/login */}
-      {modalIsOpen && (
-        <div className="modal">
-          {isRegistering ? (
-            <RegisterForm setModalIsOpen={setModalIsOpen} />
-          ) : (
-            <LoginForm setModalIsOpen={setModalIsOpen} />
-          )}
-        </div>
-      )}
-    </nav>
+        {/* Popover for registration/login */}
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+        >
+          <Box p={2}>
+            {isRegistering ? (
+              <RegisterForm setModalIsOpen={handleClose} />
+            ) : (
+              <LoginForm setModalIsOpen={handleClose} />
+            )}
+          </Box>
+        </Popover>
+      </Toolbar>
+  </AppBar>
   );
 };
 

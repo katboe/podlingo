@@ -1,18 +1,23 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PodcastSearch from './components/PodcastSearch';
 import UserLanguages from './components/UserLanguages';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme';
+
 import Navbar from './components/Navbar';
-import './styles.css'; 
+//import './styles.css'; 
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<PodcastSearch />} />
-        <Route path="/settings" element={<UserLanguages />} />
-      </Routes>
-    </Router>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<PodcastSearch />} />
+            <Route path="/settings" element={<UserLanguages />} />
+          </Routes>
+        </ThemeProvider>
+      </Router>
   );
 }
 

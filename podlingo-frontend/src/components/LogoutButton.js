@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import { Button } from '@mui/material';
 
 const LogoutButton = () => {
   const { logout } = useContext(UserContext); 
@@ -12,7 +13,13 @@ const LogoutButton = () => {
   };
 
   return (
-    <button onClick={handleLogout}>Log Out</button>
+    <Button 
+      color="primary" 
+      onClick={handleLogout} 
+      style={{ marginTop: '16px' }}
+    >
+      Log Out
+    </Button>
   );
 };
 

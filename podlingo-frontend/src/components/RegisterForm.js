@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { TextField, Button, Typography, Box } from '@mui/material';
 import { UserContext } from '../context/UserContext'; // Adjust the import based on your structure
 
 const RegisterForm = ({ setModalIsOpen }) => {
@@ -40,41 +41,57 @@ const RegisterForm = ({ setModalIsOpen }) => {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
+    <Box p={2}>
+      <Typography variant="h4" gutterBottom>
+        Register
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
+        <Box mb={2}>
+          <TextField
+            label="Username"
+            variant="outlined"
+            fullWidth
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
+        </Box>
+        <Box mb={2}>
+          <TextField
+            label="Email"
+            variant="outlined"
             type="email"
+            fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
+        </Box>
+        <Box mb={2}>
+          <TextField
+            label="Password"
+            variant="outlined"
             type="password"
+            fullWidth
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-        </div>
-        <button type="submit">Register</button>
+          {error && <Typography color="error">{error}</Typography>}
+        </Box>
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Register
+        </Button>
       </form>
-      <button onClick={() => setModalIsOpen(false)}>Cancel</button>
-    </div>
+      <Button
+        onClick={() => setModalIsOpen(false)}
+        variant="outlined"
+        sx={{ mt: 1 }} // Using sx for margin top
+        fullWidth
+      >
+        Cancel
+      </Button>
+    </Box>
   );
 };
 
