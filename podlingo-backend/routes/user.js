@@ -9,17 +9,27 @@ const userRouter = express.Router();
 userRouter.post('/languages', authenticateJWT, async (req, res) => {
   const { languageCode, level } = req.body;
 
-  const user = await User.findByIdAndUpdate(
-    req.user._id, // Correctly access userId
-    { $addToSet: { languages: { code: languageCode, level: level } } }, // Use $addToSet to avoid duplicates
-    { new: true } // Return the updated user
-  );
+  try {
+    const user = await User.findById(req.user._id); // Find user by ID
 
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the language already exists
+    const existingLanguage = user.languages.find(lang => lang.code === languageCode);
+    if (existingLanguage) {
+      return res.status(400).json({ message: 'Language already added' });
+    }
+
+    // If it doesn't exist, add the new language
+    user.languages.push({ code: languageCode, level: level });
+    await user.save(); // Save the updated user
+
+    res.json({ message: 'Languages updated', languages: user.languages }); // Return the updated languages
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
   }
-
-  res.json({ message: 'Languages updated' });
 });
 
 // Update a specific language level for the user

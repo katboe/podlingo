@@ -12,6 +12,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Snackbar, 
+  Alert
 } from '@mui/material';
 
 const UserLanguages = () => {
@@ -24,6 +26,8 @@ const UserLanguages = () => {
   const [selectedLevel, setSelectedLevel] = useState('');
   const [newLevel, setNewLevel] = useState('');
   const [editMode, setEditMode] = useState({}); // Tracks which language is in edit mode
+  const [error, setError] = useState(null); // State for error message
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // State for snackbar visibility
 
   const toggleEditMode = (code, level) => {
     setEditMode((prev) => ({ ...prev, [code]: !prev[code] }));
@@ -81,20 +85,34 @@ const UserLanguages = () => {
 
   const handleAddLanguage = async () => {
     if (selectedLanguage && selectedLevel) {
-      // Add language to the user's languages via API
-      await fetch(`${process.env.REACT_APP_API_URL}/user/languages`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ languageCode: selectedLanguage, level: selectedLevel }),
-      });
+      try { 
+        // Add language to the user's languages via API
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/languages`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ languageCode: selectedLanguage, level: selectedLevel }),
+        });
 
-      // Update the local state
-      setUserLanguages((prev) => [...prev, { code: selectedLanguage, level: selectedLevel }]);
-      setSelectedLanguage('');
-      setSelectedLevel('');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to add language');
+        }
+
+        // Update the local state
+        const data = await response.json();
+        setUserLanguages((prev) => [...prev, { code: selectedLanguage, level: selectedLevel }]);
+        setSelectedLanguage('');
+        setSelectedLevel('');
+      } catch (error) {
+        // Handle error (e.g., display error message to the user)
+        console.error('Error adding language:', error.message);
+        //alert(error.message); // Simple alert for demo; consider using a snackbar or modal
+        setError(error.message); // Set error message
+        setSnackbarOpen(true); // Open snackbar
+      }
     }
   };
   
@@ -237,6 +255,16 @@ const UserLanguages = () => {
         </TableBody>
       </Table>
     </TableContainer>
+    <Snackbar 
+      open={snackbarOpen} 
+      autoHideDuration={6000} 
+      onClose={() => setSnackbarOpen(false)} 
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+    >
+      <Alert onClose={() => setSnackbarOpen(false)} severity="error" sx={{ backgroundColor: '#ffcccc', color: 'red', opacity: 0.7 }}>
+        {error} {/* Display the error message */}
+      </Alert>
+    </Snackbar>
   </Box>
   );
 };
