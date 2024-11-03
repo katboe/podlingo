@@ -14,9 +14,8 @@ const LogoutButton = () => {
 
   return (
     <Button 
-      color="primary" 
+      color="inherit" 
       onClick={handleLogout} 
-      style={{ marginTop: '16px' }}
     >
       Log Out
     </Button>

@@ -29,9 +29,14 @@ const Navbar = () => {
       <Toolbar style={{ justifyContent: 'flex-end' }}>
         {isAuthenticated ? (
           <>
-            <Link to="/settings" style={{ textDecoration: 'none' }}>
-              <Button color="inherit">Settings</Button>
-            </Link>
+            <Button 
+              component={Link} 
+              to="/settings" 
+              color="inherit" 
+              style={{ textDecoration: 'none' }} // Remove underline for the button text
+            >
+              Settings
+            </Button>
             <LogoutButton />
           </>
         ) : (
