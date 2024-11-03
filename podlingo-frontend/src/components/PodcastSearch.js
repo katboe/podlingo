@@ -1,35 +1,50 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Select, MenuItem, Button, CircularProgress, Typography } from '@mui/material';
+import {
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  CircularProgress,
+  Typography,
+  Snackbar,
+  Alert,
+  Box,
+  List,
+  ListItem,
+} from '@mui/material';
 import PodcastItem from './PodcastItem.js';
 
 const PodcastSearch = () => {
   const [query, setQuery] = useState('');
   const [language, setLanguage] = useState('');
   const [level, setLevel] = useState('');
-  const [availableLevels, setAvailableLevels] = useState([]); 
+  const [availableLevels, setAvailableLevels] = useState([]);
   const [availableLanguages, setAvailableLanguages] = useState([]);
   const [podcasts, setPodcasts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [error, setError] = useState('');
 
-  // Fetch available languages on component mount
+  // Fetch available languages and levels on component mount
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/languages`); // Adjust API endpoint as necessary
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/languages`);
         setAvailableLanguages(response.data);
       } catch (err) {
         setError('Error fetching languages.');
+        setSnackbarOpen(true);
       }
     };
 
     const fetchLevels = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/levels`); // Fetch levels from new endpoint
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/levels`);
         setAvailableLevels(response.data);
       } catch (err) {
         setError('Error fetching language levels.');
+        setSnackbarOpen(true);
       }
     };
 
@@ -39,8 +54,8 @@ const PodcastSearch = () => {
 
   const handleSearch = async () => {
     setLoading(true);
-    setError(null);
-    setPodcasts([]); // Clear previous results before the new search
+    setError('');
+    setPodcasts([]);
 
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/search`, {
@@ -58,16 +73,16 @@ const PodcastSearch = () => {
           setError('An unexpected error occurred. Please try again.');
         }
       } else {
-        // If the error doesn't have a response (e.g., network issues)
         setError('Network error. Please check your connection and try again.');
       }
+      setSnackbarOpen(true);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
+    <Box p={3}>
       <Typography variant="h4">Search Podcasts</Typography>
       <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <TextField
@@ -76,6 +91,7 @@ const PodcastSearch = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           fullWidth
+          sx={{ minWidth: '300px' }} // Minimum width to prevent it from being too small
         />
         <Select
           value={language}
@@ -83,6 +99,7 @@ const PodcastSearch = () => {
           displayEmpty
           fullWidth
           variant="outlined"
+          sx={{ minWidth: '300px' }} // Minimum width for the select field
         >
           <MenuItem value="">
             <em>Select Language</em>
@@ -99,6 +116,7 @@ const PodcastSearch = () => {
           displayEmpty
           fullWidth
           variant="outlined"
+          sx={{ minWidth: '300px' }} // Minimum width for the select field
         >
           <MenuItem value="">
             <em>Select Level</em>
@@ -115,20 +133,36 @@ const PodcastSearch = () => {
           onClick={handleSearch}
           disabled={loading}
           startIcon={loading ? <CircularProgress size={20} /> : null}
+          sx={{ minWidth: '300px' }} // Minimum width for the button
         >
           {loading ? 'Searching...' : 'Search'}
         </Button>
       </form>
 
-      {error && <Typography color="error">{error}</Typography>}
+      {podcasts.length > 0 && (
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="h6">Results:</Typography>
+          <List>
+            {podcasts.map((podcast) => (
+              <ListItem key={podcast.id}>
+                <PodcastItem podcast={podcast} />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      )}
 
-      {podcasts.length > 0 && <Typography variant="h6">Results:</Typography>}
-      <ul>
-        {podcasts.map((podcast) => (
-          <PodcastItem podcast={podcast} key={podcast.id} />
-        ))}
-      </ul>
-    </div>
+      <Snackbar 
+        open={snackbarOpen} 
+        autoHideDuration={6000} 
+        onClose={() => setSnackbarOpen(false)} 
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 };
 

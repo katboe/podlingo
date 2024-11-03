@@ -35,7 +35,7 @@ const Navbar = () => {
               color="inherit" 
               style={{ textDecoration: 'none' }} // Remove underline for the button text
             >
-              Podcast Search
+              My Podcasts
             </Button>
             <Button 
               component={Link} 
