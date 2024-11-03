@@ -20,7 +20,6 @@ const UserLanguages = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [userLanguages, setUserLanguages] = useState([]); 
   const [availableLanguages, setAvailableLanguages] = useState([]); 
-  const [languageMap, setLanguageMap] = useState({}); 
   const [availableLevels, setAvailableLevels] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
@@ -69,12 +68,7 @@ const UserLanguages = () => {
         
         const data = await response.json();
         setAvailableLanguages(data);
-        const langMap = data.reduce((acc, lang) => {
-          acc[lang.code] = lang.name;
-          return acc;
-        }, {});
 
-        setLanguageMap(langMap);
       } catch (error) {
         console.error('Error fetching available languages:', error);
         setError(error.message);
@@ -120,7 +114,7 @@ const UserLanguages = () => {
           throw new Error(errorData.message || 'Failed to add language');
         }
 
-        const data = await response.json();
+        await response.json();
         setUserLanguages((prev) => [...prev, { code: selectedLanguage, level: selectedLevel }]);
         setSelectedLanguage('');
         setSelectedLevel('');
@@ -180,13 +174,6 @@ const UserLanguages = () => {
       setSnackbarOpen(true);
     }
   };
-
-  const renderLevelOptions = (newLevel) =>
-    availableLevels.map((levelObj) => (
-      <option key={levelObj._id} value={levelObj.level}>
-        {levelObj.level || levelObj.description || 'Unnamed Level'}
-      </option>
-    ));
 
   return (
     <Box p={3}>

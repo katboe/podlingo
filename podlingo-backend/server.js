@@ -37,7 +37,7 @@ app.use('/api/user', userRouter);
 
 // Root route
 app.get('/', (req, res) => {
-    res.send('Welcome to the Podcast API!');
+    res.send('Welcome to the Podlingo API!');
   });
 
 

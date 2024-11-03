@@ -1,10 +1,10 @@
-# Backend Production Dockerfile
-FROM node:16 AS build
+# Backend Development Dockerfile
+FROM node:16
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
 COPY . .
 
@@ -13,14 +13,12 @@ ARG PODCAST_INDEX_API_KEY
 ENV PODCAST_INDEX_API_KEY=$PODCAST_INDEX_API_KEY
 ARG PODCAST_INDEX_API_SECRET
 ENV PODCAST_INDEX_API_SECRET=$PODCAST_INDEX_API_SECRET
+ARG CLIENT_URL
+ENV CLIENT_URL=$CLIENT_URL
 
-# Final Production Stage
-FROM node:16 AS production
-
-WORKDIR /usr/src/app
-
-COPY --from=build /usr/src/app .
+#  Hot reloading
+RUN npm install -g nodemon
 
 EXPOSE 5000
 
-CMD ["node", "server.js"]  # Replace with your actual start command for production
+CMD ["npm", "run", "dev"]  # Replace with your start command for development
