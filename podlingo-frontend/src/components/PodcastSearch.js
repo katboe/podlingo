@@ -7,13 +7,12 @@ import {
   Button,
   CircularProgress,
   Typography,
-  Snackbar,
-  Alert,
   Box,
   List,
   ListItem,
 } from '@mui/material';
 import PodcastItem from './PodcastItem.js';
+import SnackbarNotification from './SnackbarNotification';
 
 const PodcastSearch = () => {
   const [query, setQuery] = useState('');
@@ -152,16 +151,11 @@ const PodcastSearch = () => {
         </Box>
       )}
 
-      <Snackbar 
+      <SnackbarNotification 
         open={snackbarOpen} 
-        autoHideDuration={6000} 
         onClose={() => setSnackbarOpen(false)} 
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-          {error}
-        </Alert>
-      </Snackbar>
+        message={error || 'An error occurred'} 
+      />
     </Box>
   );
 };

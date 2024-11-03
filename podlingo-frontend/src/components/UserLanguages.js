@@ -12,9 +12,9 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Snackbar, 
-  Alert
 } from '@mui/material';
+import SnackbarNotification from './SnackbarNotification'; // Import the new component
+
 
 const UserLanguages = () => {
   const { isAuthenticated } = useContext(UserContext);
@@ -274,15 +274,11 @@ const UserLanguages = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Snackbar 
+      <SnackbarNotification 
         open={snackbarOpen} 
-        autoHideDuration={6000} 
         onClose={() => setSnackbarOpen(false)} 
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-        <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-          {error}
-        </Alert>
-      </Snackbar>
+        message={error || 'An error occurred'} 
+      />
     </Box>
   );
 };
