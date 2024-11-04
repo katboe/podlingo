@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -9,7 +9,7 @@ export const useLanguages = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [languages, levels, userLangs] = await Promise.all([
@@ -30,9 +30,9 @@ export const useLanguages = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const addLanguage = async (languageCode, level) => {
+  const addLanguage = useCallback(async (languageCode, level) => {
     try {
       const response = await fetch(`${BASE_URL}/user/languages`, {
         method: 'POST',
@@ -53,9 +53,9 @@ export const useLanguages = () => {
       setError(err.message);
       return false;
     }
-  };
+  }, []);
 
-  const updateLanguage = async (languageCode, newLevel) => {
+  const updateLanguage = useCallback(async (languageCode, newLevel) => {
     try {
       const response = await fetch(`${BASE_URL}/user/languages`, {
         method: 'PUT',
@@ -77,9 +77,9 @@ export const useLanguages = () => {
       setError(err.message);
       return false;
     }
-  };
+  }, []);
 
-  const removeLanguage = async (languageCode) => {
+  const removeLanguage = useCallback(async (languageCode) => {
     try {
       const response = await fetch(`${BASE_URL}/user/languages`, {
         method: 'DELETE',
@@ -99,7 +99,7 @@ export const useLanguages = () => {
       setError(err.message);
       return false;
     }
-  };
+  }, []);
 
   return {
     userLanguages,
@@ -114,4 +114,4 @@ export const useLanguages = () => {
   };
 };
 
-export default useLanguages; 
+export default useLanguages;

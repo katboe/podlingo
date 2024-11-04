@@ -30,7 +30,7 @@ const UserLanguages = () => {
     if (isAuthenticated) {
       fetchData();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchData]);
 
   useEffect(() => {
     if (error) {
