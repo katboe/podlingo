@@ -1,5 +1,23 @@
 # Podlingo Backend
 
+A Node.js/Express backend service for the Podlingo language learning platform. This service manages podcast discovery, user authentication, and language learning preferences.
+
+## Features
+
+- User authentication with JWT
+- Podcast search and filtering by language/level
+- Language level classification system
+- MongoDB integration for data persistence
+- Docker support for development and production
+
+## Tech Stack
+
+- Node.js with Express
+- MongoDB with Mongoose
+- JWT for authentication
+- Docker for containerization
+- Podcast Index API integration
+
 ## Getting Started
 
 1. Clone the repository
@@ -62,4 +80,4 @@ docker run -p 5000:5000 podlingo-backend:dev
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the ISC License.

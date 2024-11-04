@@ -13,7 +13,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import SnackbarNotification from './SnackbarNotification'; // Import the new component
+import SnackbarNotification from './SnackbarNotification';
 
 
 const UserLanguages = () => {
