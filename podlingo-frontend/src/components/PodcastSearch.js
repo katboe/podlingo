@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   TextField,
   Select,
@@ -9,75 +8,40 @@ import {
   Typography,
   Box,
   List,
-  ListItem,
+  ListItem
 } from '@mui/material';
-import PodcastItem from './PodcastItem.js';
+import PodcastItem from './PodcastItem';
 import SnackbarNotification from './SnackbarNotification';
+import { usePodcasts } from '../hooks/usePodcasts';
 
 const PodcastSearch = () => {
   const [query, setQuery] = useState('');
   const [language, setLanguage] = useState('');
   const [level, setLevel] = useState('');
-  const [availableLevels, setAvailableLevels] = useState([]);
-  const [availableLanguages, setAvailableLanguages] = useState([]);
-  const [podcasts, setPodcasts] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [error, setError] = useState('');
+  
+  const {
+    podcasts,
+    availableLanguages,
+    availableLevels,
+    loading,
+    error,
+    fetchMetadata,
+    searchPodcasts
+  } = usePodcasts();
 
-  // Fetch available languages and levels on component mount
   useEffect(() => {
-    const fetchLanguages = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/languages`);
-        setAvailableLanguages(response.data);
-      } catch (err) {
-        setError('Error fetching languages.');
-        setSnackbarOpen(true);
-      }
-    };
+    fetchMetadata();
+  }, [fetchMetadata]);
 
-    const fetchLevels = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/levels`);
-        setAvailableLevels(response.data);
-      } catch (err) {
-        setError('Error fetching language levels.');
-        setSnackbarOpen(true);
-      }
-    };
-
-    fetchLanguages();
-    fetchLevels();
-  }, []);
-
-  const handleSearch = async () => {
-    setLoading(true);
-    setError('');
-    setPodcasts([]);
-
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/podcasts/search`, {
-        params: { query, language, level },
-      });
-      const { feeds } = response.data;
-      setPodcasts(feeds);
-    } catch (err) {
-      if (err.response) {
-        if (err.response.status === 400) {
-          setError('Please select a language.');
-        } else if (err.response.status === 500) {
-          setError('Error fetching podcasts from the server. Please try again.');
-        } else {
-          setError('An unexpected error occurred. Please try again.');
-        }
-      } else {
-        setError('Network error. Please check your connection and try again.');
-      }
+  useEffect(() => {
+    if (error) {
       setSnackbarOpen(true);
-    } finally {
-      setLoading(false);
     }
+  }, [error]);
+
+  const handleSearch = () => {
+    searchPodcasts({ query, language, level });
   };
 
   return (

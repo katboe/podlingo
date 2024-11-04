@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { podcastService } from '../services/podcastService';
 
 const PodcastList = () => {
     const [podcasts, setPodcasts] = useState([]);
@@ -11,14 +11,16 @@ const PodcastList = () => {
   
     // Fetch podcasts from the backend
     useEffect(() => {
-      axios.get(`${process.env.REACT_APP_API_URL}/podcasts`)
-        .then(response => {
-          setPodcasts(response.data);
-          setFilteredPodcasts(response.data);  // Initially show all podcasts
-        })
-        .catch(err => {
-          console.error('Error fetching podcasts:', err);
-        });
+      const fetchPodcasts = async () => {
+        try {
+          const data = await podcastService.getAll();
+          setPodcasts(data);
+          setFilteredPodcasts(data);
+        } catch (err) {
+          console.error('Error fetching podcasts:', err.message);
+        }
+      };
+      fetchPodcasts();
     }, []);
 
 

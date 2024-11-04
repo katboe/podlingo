@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
+import authenticateJWT from '../middleware/auth.js';
 
 const authRouter = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
@@ -56,36 +57,72 @@ authRouter.post('/login', async (req, res) => {
     const { email, password } = req.body;
   
     try {
-      // // Find the user by email
-      const user = await User.findOne({ email }).lean(); //user needs to be a plain object for jwt sign in
+      const user = await User.findOne({ email }).lean();
       if (!user) {
-         return res.status(400).json({ message: 'Invalid credentials' });
+        return res.status(400).json({ message: 'Invalid credentials' });
       }
   
-      // // Compare password with hashed password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-         return res.status(400).json({ message: 'Invalid credentials' });
+        return res.status(400).json({ message: 'Invalid credentials' });
       }
-     
-      // Generate JWT
-      const token = jwt.sign(user, JWT_SECRET, { expiresIn: '1h' });
-
-      // Send the token in an HttpOnly cookie
-      res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'Lax',  path: '/' }); // Secure=true in production
-      //res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'None',  path: '/' }); // Secure=true in production
-      res.status(200).json({ message: 'Login successful' });
-      
+  
+      const token = jwt.sign(
+        {
+          _id: user._id,
+          email: user.email,
+          username: user.username
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+  
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax',
+        path: '/',
+        maxAge: 3600000, // 1 hour
+        domain: process.env.NODE_ENV === 'production' ? process.env.DOMAIN : 'localhost'
+      });
+  
+      res.json({
+        user: {
+          id: user._id,
+          email: user.email,
+          username: user.username
+        }
+      });
     } catch (error) {
-      console.log(error)
+      console.error('Login error:', error);
       res.status(500).json({ message: 'Server error' });
     }
   });
 
 // Logout route (to clear the cookie)
 authRouter.post('/logout', (req, res) => {
-  res.clearCookie('token'); // Clear the JWT cookie
-  res.json({ message: 'Logout successful' });
+  res.cookie('token', '', {
+    httpOnly: true,
+    expires: new Date(0),
+    path: '/'
+  });
+  res.json({ message: 'Logged out successfully' });
+});
+
+// Add verify endpoint
+authRouter.get('/verify', authenticateJWT, async (req, res) => {
+  try {
+    res.json({
+      user: {
+        id: req.user._id,
+        email: req.user.email,
+        username: req.user.username
+      }
+    });
+  } catch (error) {
+    console.error('Verify error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 export default authRouter;

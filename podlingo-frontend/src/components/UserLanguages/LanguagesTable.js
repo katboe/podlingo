@@ -1,16 +1,8 @@
 import React from 'react';
-import {
-  Button,
-  MenuItem,
-  Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Button,   TableCell,
+  TableRow, } from '@mui/material';
+import DataTable from '../common/DataTable';
+import { SelectField } from '../common/SelectField';
 
 export const LanguagesTable = ({ 
   userLanguages, 
@@ -22,79 +14,72 @@ export const LanguagesTable = ({
   onNewLevelChange,
   onUpdate,
   onRemove,
-  disabled
-}) => (
-  <>
-    <Typography variant="h6" gutterBottom>Current Languages</Typography>
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Language</TableCell>
-            <TableCell>Level</TableCell>
-            <TableCell align="right">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {userLanguages.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={3} align="center">No languages found.</TableCell>
-            </TableRow>
-          ) : (
-            userLanguages.map((lang) => (
-              <TableRow key={lang.code}>
-                <TableCell>
-                  {availableLanguages.find((l) => l.code === lang.code)?.name || lang.code}
-                </TableCell>
-                <TableCell>
-                  {editMode[lang.code] ? (
-                    <Select
-                      value={newLevel}
-                      onChange={onNewLevelChange}
-                      fullWidth
-                      disabled={disabled}
-                    >
-                      {availableLevels.map((level) => (
-                        <MenuItem key={level.level} value={level.level}>
-                          {level.level}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  ) : (
-                    lang.level
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {editMode[lang.code] ? (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => onUpdate(lang.code, newLevel)}
-                      disabled={disabled}
-                    >
-                      Save
-                    </Button>
-                  ) : (
-                    <Button 
-                      variant="outlined" 
-                      onClick={() => onEditToggle(lang.code, lang.level)}
-                      disabled={disabled}
-                    >
-                      Edit
-                    </Button>
-                  )}
-                  <Button 
-                    onClick={() => onRemove(lang.code)}
-                    disabled={disabled}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </>
-); 
+  disabled,
+  loading
+}) => {
+  const columns = [
+    { id: 'language', label: 'Language' },
+    { id: 'level', label: 'Level' },
+    { id: 'actions', label: 'Actions', align: 'right' }
+  ];
+
+  const renderRow = (lang) => (
+    <TableRow key={lang.code}>
+      <TableCell>
+        {availableLanguages.find((l) => l.code === lang.code)?.name || lang.code}
+      </TableCell>
+      <TableCell>
+        {editMode[lang.code] ? (
+          <SelectField
+            value={newLevel}
+            onChange={onNewLevelChange}
+            options={availableLevels.map(level => ({
+              value: level.level,
+              label: level.level
+            }))}
+            disabled={disabled}
+          />
+        ) : (
+          lang.level
+        )}
+      </TableCell>
+      <TableCell align="right">
+        {editMode[lang.code] ? (
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => onUpdate(lang.code, newLevel)}
+            disabled={disabled}
+          >
+            Save
+          </Button>
+        ) : (
+          <Button 
+            variant="outlined" 
+            onClick={() => onEditToggle(lang.code, lang.level)}
+            disabled={disabled}
+          >
+            Edit
+          </Button>
+        )}
+        <Button 
+          onClick={() => onRemove(lang.code)}
+          disabled={disabled}
+        >
+          Delete
+        </Button>
+      </TableCell>
+    </TableRow>
+  );
+
+  return (
+    <DataTable
+      title="Current Languages"
+      columns={columns}
+      data={userLanguages}
+      loading={loading}
+      renderRow={renderRow}
+      emptyMessage="No languages found."
+    />
+  );
+}; 

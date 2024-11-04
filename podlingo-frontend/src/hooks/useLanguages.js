@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
-
-const BASE_URL = process.env.REACT_APP_API_URL;
+import { languageService } from '../services/languageService';
 
 export const useLanguages = () => {
   const [userLanguages, setUserLanguages] = useState([]);
@@ -13,12 +12,9 @@ export const useLanguages = () => {
     setLoading(true);
     try {
       const [languages, levels, userLangs] = await Promise.all([
-        fetch(`${BASE_URL}/podcasts/languages`).then(res => res.json()),
-        fetch(`${BASE_URL}/podcasts/levels`).then(res => res.json()),
-        fetch(`${BASE_URL}/user/languages`, {
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-        }).then(res => res.json())
+        languageService.getAvailableLanguages(),
+        languageService.getAvailableLevels(),
+        languageService.getUserLanguages()
       ]);
       
       setAvailableLanguages(languages);
@@ -33,42 +29,23 @@ export const useLanguages = () => {
   }, []);
 
   const addLanguage = useCallback(async (languageCode, level) => {
+    setLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/user/languages`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ languageCode, level }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to add language');
-      }
-
-      await response.json();
+      await languageService.addLanguage(languageCode, level);
       setUserLanguages(prev => [...prev, { code: languageCode, level }]);
       return true;
     } catch (err) {
       setError(err.message);
       return false;
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const updateLanguage = useCallback(async (languageCode, newLevel) => {
+    setLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/user/languages`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ languageCode, newLevel }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update language');
-      }
-
+      await languageService.updateLanguage(languageCode, newLevel);
       setUserLanguages(prev => 
         prev.map(lang => lang.code === languageCode ? { ...lang, level: newLevel } : lang)
       );
@@ -76,28 +53,22 @@ export const useLanguages = () => {
     } catch (err) {
       setError(err.message);
       return false;
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const removeLanguage = useCallback(async (languageCode) => {
+    setLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/user/languages`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ languageCode }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to remove language');
-      }
-
+      await languageService.removeLanguage(languageCode);
       setUserLanguages(prev => prev.filter(lang => lang.code !== languageCode));
       return true;
     } catch (err) {
       setError(err.message);
       return false;
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -113,5 +84,3 @@ export const useLanguages = () => {
     removeLanguage
   };
 };
-
-export default useLanguages;

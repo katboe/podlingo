@@ -1,26 +1,38 @@
 import React from 'react';
-import { Card, CardContent, Typography, CardActions, Button } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, CardActions, Button, styled } from '@mui/material';
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
+  '&:hover': {
+    boxShadow: theme.shadows[4],
+  },
+}));
+
+const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
+  height: 140,
+  backgroundSize: 'contain',
+  backgroundColor: theme.palette.background.default,
+}));
 
 const PodcastItem = React.memo(({ podcast }) => (
-    <Card variant="outlined" style={{ marginBottom: '16px' }}>
+  <StyledCard>
+    {podcast.image && (
+      <StyledCardMedia
+        image={podcast.image}
+        title={podcast.title}
+      />
+    )}
     <CardContent>
-      <Typography variant="h5" component="div">
+      <Typography variant="h5" gutterBottom>
         {podcast.title}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="textSecondary" paragraph>
         {podcast.description}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="textSecondary">
         Author: {podcast.author}
       </Typography>
-      {podcast.image && (
-        <img
-          src={podcast.image}
-          alt={podcast.title}
-          loading="lazy"
-          style={{ width: '100px', marginTop: '8px' }}
-        />
-      )}
     </CardContent>
     <CardActions>
       <Button
@@ -33,7 +45,7 @@ const PodcastItem = React.memo(({ podcast }) => (
         Listen
       </Button>
     </CardActions>
-  </Card>
-  ));
+  </StyledCard>
+));
 
-export default PodcastItem;
+export default PodcastItem; 

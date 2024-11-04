@@ -19,24 +19,14 @@ const RegisterForm = ({ setModalIsOpen }) => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        login(data.token); // Log the user in after successful registration
-        setModalIsOpen(false); // Close the modal after successful registration
+      const success = await login({ username, email, password });
+      if (success) {
+        setModalIsOpen(false);
       } else {
-        setError(data.message || 'Registration failed');
+        setError('Registration failed');
       }
     } catch (err) {
-      setError('Server error');
+      setError(err.message);
     }
   };
 

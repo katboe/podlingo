@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Button, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { SelectField } from '../common/SelectField';
 
 export const AddLanguageForm = ({ 
   availableLanguages, 
@@ -14,35 +15,27 @@ export const AddLanguageForm = ({
   <Box mb={3}>
     <Typography variant="h6">Add Language</Typography>
     <Box display="flex" gap={2} mt={1}>
-      <Select
+      <SelectField
+        label="Language"
         value={selectedLanguage}
         onChange={onLanguageChange}
-        displayEmpty
-        fullWidth
+        options={availableLanguages.map(lang => ({
+          value: lang.code,
+          label: lang.name
+        }))}
         disabled={disabled}
-      >
-        <MenuItem value="" disabled>Select Language</MenuItem>
-        {availableLanguages.map((lang) => (
-          <MenuItem key={lang.code} value={lang.code}>
-            {lang.name}
-          </MenuItem>
-        ))}
-      </Select>
+      />
       
-      <Select
+      <SelectField
+        label="Level"
         value={selectedLevel}
         onChange={onLevelChange}
-        displayEmpty
-        fullWidth
+        options={availableLevels.map(level => ({
+          value: level.level,
+          label: level.level
+        }))}
         disabled={disabled}
-      >
-        <MenuItem value="" disabled>Select Level</MenuItem>
-        {availableLevels.map((level) => (
-          <MenuItem key={level.level} value={level.level}>
-            {level.level}
-          </MenuItem>
-        ))}
-      </Select>
+      />
       
       <Button 
         variant="contained" 

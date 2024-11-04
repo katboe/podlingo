@@ -1,73 +1,60 @@
-const BASE_URL = process.env.REACT_APP_API_URL;
+import { api } from './api';
+import { handleApiError } from '../utils/errorHandling';
 
 export const languageService = {
   async getUserLanguages() {
-    const response = await fetch(`${BASE_URL}/user/languages`, {
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to fetch user languages');
+    try {
+      const { data } = await api.get('/user/languages');
+      return data;
+    } catch (error) {
+      throw handleApiError(error);
     }
-    return response.json();
   },
 
   async getAvailableLanguages() {
-    const response = await fetch(`${BASE_URL}/podcasts/languages`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch available languages');
+    try {
+      const { data } = await api.get('/podcasts/languages');
+      return data;
+    } catch (error) {
+      throw handleApiError(error);
     }
-    return response.json();
   },
 
   async getAvailableLevels() {
-    const response = await fetch(`${BASE_URL}/podcasts/levels`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch available levels');
+    try {
+      const { data } = await api.get('/podcasts/levels');
+      return data;
+    } catch (error) {
+      throw handleApiError(error);
     }
-    return response.json();
   },
 
   async addLanguage(languageCode, level) {
-    const response = await fetch(`${BASE_URL}/user/languages`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ languageCode, level }),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to add language');
+    try {
+      const { data } = await api.post('/user/languages', { languageCode, level });
+      return data;
+    } catch (error) {
+      throw handleApiError(error);
     }
-    return response.json();
   },
 
   async updateLanguage(languageCode, newLevel) {
-    const response = await fetch(`${BASE_URL}/user/languages`, {
-      method: 'PUT',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ languageCode, newLevel }),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to update language');
+    try {
+      const { data } = await api.put('/user/languages', { languageCode, newLevel });
+      return data;
+    } catch (error) {
+      throw handleApiError(error);
     }
-    return response.json();
   },
 
   async removeLanguage(languageCode) {
-    const response = await fetch(`${BASE_URL}/user/languages`, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ languageCode }),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to remove language');
+    try {
+      const { data } = await api.delete('/user/languages', { 
+        data: { languageCode } 
+      });
+      return data;
+    } catch (error) {
+      throw handleApiError(error);
     }
-    return response.json();
-  },
+  }
 }; 

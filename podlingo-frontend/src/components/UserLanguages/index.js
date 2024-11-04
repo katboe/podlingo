@@ -4,8 +4,9 @@ import { Box, Typography } from '@mui/material';
 import { AddLanguageForm } from './AddLanguageForm';
 import { LanguagesTable } from './LanguagesTable';
 import SnackbarNotification from '../../components/SnackbarNotification';
-import useLanguages from '../../hooks/useLanguages';
+import { useLanguages } from '../../hooks/useLanguages';
 
+// Main component
 const UserLanguages = () => {
   const { isAuthenticated } = useContext(UserContext);
   const { 
@@ -97,4 +98,5 @@ const UserLanguages = () => {
   );
 };
 
+// Export the component
 export default UserLanguages; 

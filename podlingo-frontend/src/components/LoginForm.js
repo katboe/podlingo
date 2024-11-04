@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { UserContext } from '../context/UserContext'; // Adjust the import based on your structure
+import { UserContext } from '../context/UserContext';
 import {
   Container,
   Button,
@@ -12,13 +12,12 @@ const LoginForm = ({ setModalIsOpen }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useContext(UserContext); // Assuming login is a method in UserContext
+  const { login } = useContext(UserContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Client-side validation for email and password length
     if (!email.includes('@')) {
       setError('Please enter a valid email address');
       setSnackbarOpen(true);
@@ -32,30 +31,14 @@ const LoginForm = ({ setModalIsOpen }) => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        method: 'POST',
-        credentials: 'include', //allows credentials to be sent and received
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        login(data.token); // Log the user in with the token received
-        setModalIsOpen(false); // Close the modal after successful login
-      } else {
-        setError(data.message || 'Login failed');
+      const success = await login({ email, password });
+      if (success) {
+        setModalIsOpen(false);
       }
     } catch (err) {
-      setError('Server error');
+      setError(err.message);
+      setSnackbarOpen(true);
     }
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
   };
 
   return (
@@ -83,7 +66,7 @@ const LoginForm = ({ setModalIsOpen }) => {
           margin="normal"
         />
         {error && (
-          <Typography variant="body2" color="error" sx={{ marginBottom: 2 }}>
+          <Typography color="error" sx={{ mb: 2 }}>
             {error}
           </Typography>
         )}
@@ -97,11 +80,10 @@ const LoginForm = ({ setModalIsOpen }) => {
         </div>
       </form>
 
-      {/* Snackbar for error messages */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
-        onClose={handleSnackbarClose}
+        onClose={() => setSnackbarOpen(false)}
         message={error}
       />
     </Container>
