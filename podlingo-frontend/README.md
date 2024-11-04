@@ -16,7 +16,7 @@ A React-based frontend application for the Podlingo language learning platform. 
 - Material-UI
 - React Router DOM
 - Axios for API calls
-- JWT for authentication
+- HTTP-only cookies for authentication
 
 ## Getting Started
 
@@ -27,7 +27,7 @@ A React-based frontend application for the Podlingo language learning platform. 
     ```
 3. Create a `.env` file in the root directory with:
 ```bash
-REACT_APP_API_URL=your_backend_url
+REACT_APP_API_URL=http://localhost:5000/api  # Your backend API URL
 ```
 4. Start the development server:
 ```bash
@@ -53,9 +53,11 @@ docker run -p 3000:3000 podlingo-frontend:dev
 ## Project Structure
 
 - `/src/components` - React components
+- `/src/config` - Configuration files
 - `/src/context` - Context providers
 - `/src/hooks` - Custom React hooks
 - `/src/services` - API service layers
+- `/src/utils` - Utility functions and helpers
 
 ## Contributing
 
@@ -68,3 +70,19 @@ docker run -p 3000:3000 podlingo-frontend:dev
 ## License
 
 This project is licensed under the MIT License.
+
+## Development Notes
+
+When running in development mode:
+
+- Ensure your backend CORS settings allow requests from http://localhost:3000
+- Cookie settings must be configured properly for authentication
+- Backend should be running on http://localhost:5000
+
+## Troubleshooting
+
+Common issues:
+
+- Authentication not persisting: Check that cookies are being set properly and CORS is configured correctly
+- API connection issues: Verify REACT_APP_API_URL is set correctly in .env
+- Login/Register not working: Ensure backend is running and accessible
