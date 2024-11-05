@@ -7,7 +7,7 @@ Podlingo is a language learning platform that helps users discover podcasts tail
 - User authentication and profile management
 - Podcast discovery with language and level filtering
 - Language proficiency tracking (A1-C2 levels)
-- Dark theme UI
+- Comprehensive Security features
 - Responsive design
 - Docker support for both development and production
 
@@ -23,58 +23,54 @@ Podlingo is a language learning platform that helps users discover podcasts tail
 - Node.js with Express
 - MongoDB with Mongoose
 - JWT Authentication
+- Helmet for security headers
+- Rate limiting and compression
 - Podcast Index API integration
-
-## Project Structure
-
-- `/src/components` - React components
-- `/src/context` - Context providers
-- `/src/hooks` - Custom React hooks
-- `/src/services` - API service layers
 
 ## Getting Started
 
 1. Clone the repository
 2. Set up environment variables:
 
-Frontend (.env):
-```bash
-REACT_APP_API_URL=http://localhost:5000
-```
+    Frontend (.env):
+    ```bash
+    REACT_APP_API_URL=http://localhost:5000
+    ```
 
-Backend (.env):
-```bash
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-PODCAST_INDEX_API_KEY=your_api_key
-PODCAST_INDEX_API_SECRET=your_api_secret
-CLIENT_URL=http://localhost:3000
-```
+    Backend (.env):
+    ```bash
+    MONGO_URI=your_mongodb_uri
+    JWT_SECRET=your_jwt_secret
+    PODCAST_INDEX_API_KEY=your_api_key
+    PODCAST_INDEX_API_SECRET=your_api_secret
+    CLIENT_URL=http://localhost:3000
+    NODE_ENV=development    # or production
+    DOMAIN=your_domain     # required in production
+    ```
 
 3. Start the services:
 
+    #### With Docker Compose:
 
-### Docker Compose
+    Development:
+    ```bash
+    docker-compose up
+    ```
 
-Development:
-```bash
-docker-compose up
-```
+    Production:
+    ```bash
+    docker-compose -f docker-compose.prod.yml up
+    ```
 
-Production:
-```bash
-docker-compose -f docker-compose.prod.yml up
-```
+    #### Running Locally:
 
-### Running Locally
+    ```bash
+    # Backend
+    cd podlingo-backend && npm install && npm run dev
 
-```bash
-# Backend
-cd podlingo-backend && npm install && npm run dev
-
-# Frontend
-cd podlingo-frontend && npm install && npm run dev
-```
+    # Frontend
+    cd podlingo-frontend && npm install && npm run dev
+    ```
 
 ## Documentation
 
