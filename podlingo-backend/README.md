@@ -32,6 +32,8 @@ A Node.js/Express backend service for the Podlingo language learning platform. T
     PODCAST_INDEX_API_KEY=your_api_key
     PODCAST_INDEX_API_SECRET=your_api_secret
     CLIENT_URL=your_frontend_url
+    NODE_ENV=development    # or production
+    DOMAIN=your_domain     # required in production
     ```
 4. Start the development server:
     ```bash
@@ -63,12 +65,14 @@ docker run -p 5000:5000 podlingo-backend:dev
 
 ## Project Structure
 
-- `/config` - Configuration files
-- `/models` - Mongoose models
-- `/routes` - Express routes
-- `/middleware` - Custom middleware
-- `/utils` - Utility functions
-- `/scripts` - Database population scripts
+- `/config` - Configuration files and environment setup
+- `/constants` - Application-wide constants and enums
+- `/middleware` - Security, authentication and custom middleware
+- `/models` - Mongoose data models
+- `/routes` - API route handlers
+- `/utils` - Helper functions and utilities
+- `/scripts` - Database population and maintenance scripts
+- `/validation` - Input validation schemas
 
 ## Contributing
 
