@@ -1,21 +1,26 @@
 import jwt from 'jsonwebtoken';
+import config from '../config/config.js';
+import logger from '../config/logger.js';
+import { errorResponse } from '../utils/response.js';
+import { HTTP_STATUS } from '../constants/index.js';
 
 const authenticateJWT = (req, res, next) => {
-
-  const token = req.cookies.token; // Get token from cookie
+  const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    return res.status(HTTP_STATUS.UNAUTHORIZED)
+      .json(errorResponse('No token provided'));
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      console.log(err)
-      return res.status(403).json({ message: 'Unauthorized: Invalid or expired token' }); // Forbidden if token is invalid
-    }
-    req.user = user; // Save the user info for use in the next middleware
+  try {
+    const user = jwt.verify(token, config.jwt.secret);
+    req.user = user;
     next();
-  });
+  } catch (error) {
+    logger.error('JWT verification error:', error);
+    return res.status(HTTP_STATUS.FORBIDDEN)
+      .json(errorResponse('Invalid or expired token'));
+  }
 };
 
 export default authenticateJWT;

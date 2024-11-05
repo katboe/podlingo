@@ -2,8 +2,8 @@ import { api } from './api';
 
 export const podcastService = {
   async search(params) {
-    const { data } = await api.get('/podcasts/search', { params });
-    return data;
+    const response = await api.get('/podcasts/search', { params });
+    return response.data.data || { feeds: [] };
   },
 
   async getAll() {
@@ -12,12 +12,12 @@ export const podcastService = {
   },
 
   async getLanguages() {
-    const { data } = await api.get('/podcasts/languages');
-    return data;
+    const response = await api.get('/podcasts/languages');
+    return response.data.data;
   },
 
   async getLevels() {
-    const { data } = await api.get('/podcasts/levels');
-    return data;
+    const response = await api.get('/podcasts/levels');
+    return response.data.data;
   }
 }; 

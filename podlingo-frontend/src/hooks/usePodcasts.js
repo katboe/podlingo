@@ -15,11 +15,13 @@ export const usePodcasts = () => {
         podcastService.getLanguages(),
         podcastService.getLevels()
       ]);
-      setAvailableLanguages(languages);
-      setAvailableLevels(levels);
+      setAvailableLanguages(Array.isArray(languages) ? languages : []);
+      setAvailableLevels(Array.isArray(levels) ? levels : []);
       setError(null);
     } catch (err) {
       setError(err.message);
+      setAvailableLanguages([]);
+      setAvailableLevels([]);
     } finally {
       setLoading(false);
     }
@@ -28,12 +30,14 @@ export const usePodcasts = () => {
   const searchPodcasts = useCallback(async (params) => {
     setLoading(true);
     try {
-      const { feeds } = await podcastService.search(params);
+      const result = await podcastService.search(params);
+      const feeds = result?.feeds || [];
       setPodcasts(feeds);
       setError(null);
       return feeds;
     } catch (err) {
       setError(err.message);
+      setPodcasts([]);
       return [];
     } finally {
       setLoading(false);

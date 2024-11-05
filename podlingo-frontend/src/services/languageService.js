@@ -4,8 +4,8 @@ import { handleApiError } from '../utils/errorHandling';
 export const languageService = {
   async getUserLanguages() {
     try {
-      const { data } = await api.get('/user/languages');
-      return data;
+      const response = await api.get('/user/languages');
+      return response.data.data || [];
     } catch (error) {
       throw handleApiError(error);
     }
@@ -13,8 +13,8 @@ export const languageService = {
 
   async getAvailableLanguages() {
     try {
-      const { data } = await api.get('/podcasts/languages');
-      return data;
+      const response = await api.get('/podcasts/languages');
+      return response.data.data || [];
     } catch (error) {
       throw handleApiError(error);
     }
@@ -22,8 +22,8 @@ export const languageService = {
 
   async getAvailableLevels() {
     try {
-      const { data } = await api.get('/podcasts/levels');
-      return data;
+      const response = await api.get('/podcasts/levels');
+      return response.data.data || [];
     } catch (error) {
       throw handleApiError(error);
     }

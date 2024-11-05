@@ -4,8 +4,10 @@ import { handleApiError } from '../utils/errorHandling';
 export const authService = {
   async verify() {
     try {
-      const response = await api.get('/auth/verify');
-      return { data: response.data };
+      const response = await api.get('/auth/verify', { 
+        withCredentials: true 
+      });
+      return response.data;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -14,17 +16,19 @@ export const authService = {
   async login(credentials) {
     try {
       const response = await api.post('/auth/login', credentials);
-      return response;
+      if (!response.data) {
+        throw new Error('No response from server');
+      }
+      return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed';
-      throw new Error(message);
+      throw handleApiError(error);
     }
   },
 
   async register(userData) {
     try {
-      const { data } = await api.post('/auth/register', userData);
-      return data;
+      const response = await api.post('/auth/register', userData);
+      return response.data;
     } catch (error) {
       throw handleApiError(error);
     }

@@ -17,12 +17,15 @@ export const useLanguages = () => {
         languageService.getUserLanguages()
       ]);
       
-      setAvailableLanguages(languages);
-      setAvailableLevels(levels);
-      setUserLanguages(userLangs);
+      setAvailableLanguages(Array.isArray(languages) ? languages : []);
+      setAvailableLevels(Array.isArray(levels) ? levels : []);
+      setUserLanguages(Array.isArray(userLangs) ? userLangs : []);
       setError(null);
     } catch (err) {
       setError(err.message);
+      setAvailableLanguages([]);
+      setAvailableLevels([]);
+      setUserLanguages([]);
     } finally {
       setLoading(false);
     }

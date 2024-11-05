@@ -84,8 +84,38 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const register = async (userData) => {
+    try {
+      const response = await authService.register(userData);
+      
+      if (!response.data || !response.data.user) {
+        throw new Error('Invalid response from server');
+      }
+
+      setState(prev => ({
+        ...prev,
+        isAuthenticated: true,
+        userData: response.data.user,
+        error: null
+      }));
+      
+      return true;
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: error.message || 'Registration failed'
+      }));
+      throw error;
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ ...state, login, logout }}>
+    <UserContext.Provider value={{
+      ...state,
+      login,
+      register,
+      logout
+    }}>
       {children}
     </UserContext.Provider>
   );

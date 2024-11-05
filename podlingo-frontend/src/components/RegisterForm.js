@@ -7,23 +7,20 @@ const RegisterForm = ({ setModalIsOpen }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useContext(UserContext); // Assuming login is a method in UserContext
+  const { register } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Client-side validation for password length
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
       return;
     }
 
     try {
-      const success = await login({ username, email, password });
+      const success = await register({ username, email, password });
       if (success) {
         setModalIsOpen(false);
-      } else {
-        setError('Registration failed');
       }
     } catch (err) {
       setError(err.message);
