@@ -12,9 +12,9 @@ import classifyPodcastLevel from '../utils/languageLevelClassifier.js';
 import authenticateJWT from '../middleware/auth.js';
 import rateLimit from 'express-rate-limit';
 import { SECURITY, API } from '../constants/index.js';
-
+import { SECURITY, API } from '../constants/index.js';
 const podcastRouter = express.Router();
-
+const podcastRouter = express.Router();
 const generateAuthHash = () => {
   const apiHeaderTime = Math.floor(Date.now() / 1000);
   const sha1Hash = crypto.createHash('sha1');
@@ -25,8 +25,7 @@ const generateAuthHash = () => {
     hashForHeader: sha1Hash.digest('hex'), 
     apiHeaderTime 
   };
-};
-
+  };
 const podcastLimiter = rateLimit({
   windowMs: SECURITY.RATE_LIMIT_WINDOW_MS,
   max: SECURITY.RATE_LIMIT_MAX_REQUESTS,
@@ -94,24 +93,7 @@ podcastRouter.get('/search', async (req, res, next) => {
     const selectedLanguage = await Language.findOne({ code: language });
     const nativeLanguageName = selectedLanguage?.nativeName || language;
 
-    const response = await fetch(
-      `https://api.podcastindex.org/api/1.0/search/byterm?q=${query}+${nativeLanguageName}&max=200`,
-      {
-        headers: {
-          'X-Auth-Date': apiHeaderTime.toString(),
-          'X-Auth-Key': config.podcastIndex.apiKey,
-          'Authorization': hashForHeader,
-          'User-Agent': 'PodlingoApp/1.0',
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Podcast API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const podcasts = data.feeds || [];
+    const podcasts = await podcastIndexService.searchPodcasts(query, nativeLanguageName);
 
     let filteredPodcasts = podcasts.filter(podcast => podcast.language === language);
     
